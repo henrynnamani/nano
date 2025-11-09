@@ -1,10 +1,16 @@
+import { Category } from "../model/category.schema.js";
 import { Post } from "../model/post.schema.js";
+import { Tag } from "../model/tag.schema.js";
 
 const getPost = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(id)
+      .populate("category")
+      .populate("tags")
+      .exec();
+
     res.json(post).status(200);
   } catch (err) {
     console.error(err); // logging
@@ -29,7 +35,16 @@ const createPost = async (req, res) => {
   try {
     const post = await new Post(body);
 
-    post.save(); // persist in the database
+    await Category.findByIdAndUpdate(body.category, {
+      $push: { posts: post._id },
+    });
+
+    await Tag.updateMany(
+      { _id: { $in: body.tags } },
+      { $addToSet: { posts: post._id } }
+    );
+
+    post.save();
 
     res.json(post).status(201);
   } catch (err) {

@@ -18,11 +18,9 @@ const createCategory = async (req, res) => {
 const getCategoryPosts = async (req, res) => {
   const id = req.params.id;
   try {
-    const category = await Category.findById(id);
+    const category = await Category.findById(id).populate("posts").exec();
 
-    await category.populate("posts").exec();
-
-    res.json(category.posts).status(200);
+    res.json(category).status(200);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
