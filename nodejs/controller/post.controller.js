@@ -1,3 +1,4 @@
+import { Category } from "../model/category.schema.js";
 import { Post } from "../model/post.schema.js";
 
 const getPost = async (req, res) => {
@@ -26,8 +27,16 @@ const getPosts = async (req, res) => {
 const createPost = async (req, res) => {
   const body = req.body;
 
+  /**
+   * body - title, status, category(_id)
+   */
+
   try {
     const post = await new Post(body);
+
+    await Category.findByIdAndUpdate(body.category, {
+      $push: { posts: post._id },
+    });
 
     post.save(); // persist in the database
 

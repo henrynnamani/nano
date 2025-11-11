@@ -15,18 +15,29 @@ const createCategory = async (req, res) => {
   }
 };
 
-const getCategoryPosts = async (req, res) => {
-  const id = req.params.id;
+const getAllCategory = async (req, res) => {
   try {
-    const category = await Category.findById(id);
+    const categories = await Category.find();
 
-    await category.populate("posts").exec();
-
-    res.json(category.posts).status(200);
+    res.status(200).json(categories);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
   }
 };
 
-export { createCategory, getCategoryPosts };
+const getCategoryPosts = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const category = await Category.findById(id);
+
+    await category.populate("posts");
+
+    res.json(category).status(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+export { createCategory, getCategoryPosts, getAllCategory };
