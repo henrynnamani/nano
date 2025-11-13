@@ -7,6 +7,7 @@ const postSchema = new mongoose.Schema({
   },
   title: String,
   status: Boolean,
+  tags: [{ type: mongoose.Types.ObjectId, ref: "Tag" }],
 });
 
 export const Post = mongoose.model("Post", postSchema);
