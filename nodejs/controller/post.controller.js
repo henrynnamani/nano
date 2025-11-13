@@ -1,5 +1,8 @@
+import { ZodError } from "zod";
 import { Category } from "../model/category.schema.js";
 import { Post } from "../model/post.schema.js";
+import { postValidator } from "../validator/post.validator.js";
+import { Tag } from "../model/tag.schema.js";
 
 const getPost = async (req, res) => {
   const id = req.params.id;
@@ -29,20 +32,38 @@ const createPost = async (req, res) => {
 
   /**
    * body - title, status, category(_id)
+   *
+   * tags -> [tags_id]
    */
 
   try {
-    const post = await new Post(body);
+    const validatedBody = postValidator.parse(body);
+    const post = new Post(validatedBody);
 
-    await Category.findByIdAndUpdate(body.category, {
-      $push: { posts: post._id },
-    });
+    // tags: ['', '', '']
 
-    post.save(); // persist in the database
+    await post.save();
+
+    if (validatedBody.tags) {
+      await Promise.all(
+        validatedBody.tags.map(async (tag) =>
+          Tag.findByIdAndUpdate(tag, {
+            $inc: { usage: 1 },
+            $addToSet: { posts: post._id },
+          })
+        )
+      );
+    }
 
     res.json(post).status(201);
   } catch (err) {
-    console.error(err);
+    console.log(err);
+    if (err instanceof ZodError) {
+      return res.status(400).json({
+        message: "Invalid request data",
+        errors: err.errors,
+      });
+    }
     res.sendStatus(500);
   }
 };
