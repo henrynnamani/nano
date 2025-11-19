@@ -8,21 +8,48 @@
  *  }
  * - arrow function
  */
-function square(x) {
-    return x * x;
-}
-function introduceSelf(name, age, stateOfOrigin) {
-    return "My name is ".concat(name, ", I am ").concat(age, " and will go to ").concat(stateOfOrigin, " to celebrate obleee(detty december)");
-}
-// console.log(introduceSelf("Chinenye", 19, "Abia"));
-// console.log(introduceSelf("Collins", 20, "Enugu"));
-// 5! - 5 * 4 * 3 * 2 * 1
-function factorial(x) {
-    // implement
+// function square(x: number) {
+//   return x * x;
+// }
+var square = function (x) { return x * x; };
+var factorial = function (x) {
     var result = 1;
     for (var counter = x; counter >= 1; --counter) {
         result = result * counter;
     }
     return result;
-}
-console.log(factorial(5));
+};
+console.log(factorial(10));
+// function introduceSelf(name: string, stateOfOrigin: string, age: number = 18) {
+//   return `My name is ${name}, I am ${age} years old and will go to ${stateOfOrigin} to celebrate obleee(detty december)`;
+// }
+// console.log(introduceSelf("Chinenye", "Abia", 19));
+// console.log(introduceSelf("Collins", "Enugu"));
+// 5! - 5 * 4 * 3 * 2 * 1
+// function factorial(number: number) {
+//   let result = 1;
+//   for (let counter = number; counter >= 1; --counter) {
+//     result = result * counter;
+//   }
+//   return result;
+// }
+// function median() {
+//   // ... ellipsis
+//   console.log(arguments);
+//   // let sum = 0;
+//   // for (let number of arguments) {
+//   //   sum = sum + number;
+//   // }
+//   // return sum / 2;
+// }
+// // function mean(numbers: number[]) {
+// //   //implement
+// // }
+// let numbers = [3, 6, 9, 10, 2, 4];
+// /**
+//  * 1. define a variable, you would use to store the sum (0)
+//  * 2. loop through the numbers, add those numbers
+//  * 3. return sum / numbers.length
+//  */
+// // numbers.length
+// console.log(median(3, 6, 9, 10, 2, 4));
